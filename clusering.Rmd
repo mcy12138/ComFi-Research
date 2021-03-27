@@ -1,0 +1,139 @@
+---
+title: "correlations"
+author: "Carl Yang"
+date: "June 11, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+suppressWarnings(library(tidyverse))
+library(ggplot2)
+library(tidyverse)
+library(gridExtra)
+library(knitr)
+library(pander)
+library(dplyr)
+library(GGally)
+library(recommenderlab)
+IG = read.csv("data/IG_TEST.csv")
+```
+
+
+```{r}
+library(lubridate)
+colnames(IG)[1] <- "Date"
+#head(IG, 1)
+
+#IG %>% mutate(Date = as.Date(.$Date, format="%m/%d/%Y"))
+
+IG$Date = as.Date(IG$Date, format="%m/%d/%Y")
+
+IG$Year = year(IG$Date)
+```
+
+
+```{r}
+
+IG_norm = IG %>% select(class_2, coupon, oas, duration, total_return_volatility, market_value, prev_6m_total_return)
+my.fun = function(x) 
+{
+  if (is.numeric(x)) {
+    (x-mean(x, na.rm = TRUE))/ sd(x, na.rm = TRUE) 
+  }
+}
+IG_norm = apply(IG_norm[,c("coupon", "oas", "duration", "total_return_volatility", "market_value", "prev_6m_total_return")],
+              MARGIN = 2, FUN = my.fun)
+# IG_norm = data.matrix(IG_norm)
+# IG_norm = as(IG_norm, "realRatingMatrix")
+# IG_norm = normalize(IG_norm, method = 'Z-score')
+IG_norm = data.frame(IG_norm)
+IG_norm$sector = IG$class_2
+IG_norm$Year = IG$Year
+```
+
+```{r}
+period_1 = IG_norm[IG_norm$Year>= "2007" & IG_norm$Year <= "2009",]
+period_2 = IG_norm[IG_norm$Year>= "2010" & IG_norm$Year <= "2012",]
+period_3 = IG_norm[IG_norm$Year>= "2013" & IG_norm$Year <= "2015",]
+period_4 = IG_norm[IG_norm$Year>= "2016" & IG_norm$Year <= "2019",]
+```
+
+For period 1 from 2007-2009
+
+```{r}
+Industrial = period_1 %>% filter(., sector == "INDUSTRIAL")
+ggp = ggpairs(Industrial, columns = c("coupon", "oas", "duration", "total_return_volatility", "market_value", "prev_6m_total_return"))
+suppressWarnings( print(ggp, progress = F)  )# no progress bar
+```
+
+```{r}
+Utility = period_1 %>% filter(., sector == "UTILITY")
+ggp = ggpairs(Industrial, columns = c("coupon", "oas", "duration", "total_return_volatility", "market_value", "prev_6m_total_return"))
+suppressWarnings( print(ggp, progress = F)  )# no progress bar
+```
+
+```{r}
+FININST = period_1 %>% filter(., sector == "FINANCIAL_INSTITUTION")
+ggp = ggpairs(Industrial, columns = c("coupon", "oas", "duration", "total_return_volatility", "market_value", "prev_6m_total_return"))
+suppressWarnings( print(ggp, progress = F)  )# no progress bar
+```
+
+For period 2 from 2010-2012
+
+```{r}
+Industrial = period_2 %>% filter(., sector == "INDUSTRIAL")
+ggp = ggpairs(Industrial, columns = c("coupon", "oas", "duration", "total_return_volatility", "market_value", "prev_6m_total_return"))
+suppressWarnings( print(ggp, progress = F)  )# no progress bar
+```
+
+```{r}
+Utility = period_2 %>% filter(., sector == "UTILITY")
+ggp = ggpairs(Industrial, columns = c("coupon", "oas", "duration", "total_return_volatility", "market_value", "prev_6m_total_return"))
+suppressWarnings( print(ggp, progress = F)  )# no progress bar
+```
+
+```{r}
+FININST = period_2 %>% filter(., sector == "FINANCIAL_INSTITUTION")
+ggp = ggpairs(Industrial, columns = c("coupon", "oas", "duration", "total_return_volatility", "market_value", "prev_6m_total_return"))
+suppressWarnings( print(ggp, progress = F)  )# no progress bar
+```
+
+For period 3 from 2013-2015
+
+```{r}
+Industrial = period_3 %>% filter(., sector == "INDUSTRIAL")
+ggp = ggpairs(Industrial, columns = c("coupon", "oas", "duration", "total_return_volatility", "market_value", "prev_6m_total_return"))
+suppressWarnings( print(ggp, progress = F)  )# no progress bar
+```
+
+```{r}
+Utility = period_3 %>% filter(., sector == "UTILITY")
+ggp = ggpairs(Industrial, columns = c("coupon", "oas", "duration", "total_return_volatility", "market_value", "prev_6m_total_return"))
+suppressWarnings( print(ggp, progress = F)  )# no progress bar
+```
+
+```{r}
+FININST = period_3 %>% filter(., sector == "FINANCIAL_INSTITUTION")
+ggp = ggpairs(Industrial, columns = c("coupon", "oas", "duration", "total_return_volatility", "market_value", "prev_6m_total_return"))
+suppressWarnings( print(ggp, progress = F)  )# no progress bar
+```
+
+For period 4 from 2016-2019
+
+```{r}
+Industrial = period_4 %>% filter(., sector == "INDUSTRIAL")
+ggp = ggpairs(Industrial, columns = c("coupon", "oas", "duration", "total_return_volatility", "market_value", "prev_6m_total_return"))
+suppressWarnings( print(ggp, progress = F)  )# no progress bar
+```
+
+```{r}
+Utility = period_4 %>% filter(., sector == "UTILITY")
+ggp = ggpairs(Industrial, columns = c("coupon", "oas", "duration", "total_return_volatility", "market_value", "prev_6m_total_return"))
+suppressWarnings( print(ggp, progress = F)  )# no progress bar
+```
+
+```{r}
+FININST = period_4 %>% filter(., sector == "FINANCIAL_INSTITUTION")
+ggp = ggpairs(Industrial, columns = c("coupon", "oas", "duration", "total_return_volatility", "market_value", "prev_6m_total_return"))
+suppressWarnings( print(ggp, progress = F)  )# no progress bar
+```
